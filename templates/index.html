@@ -12,12 +12,34 @@
 
     .navbar a{
         text-decoration: none;
-        color: white;
+        color: rgb(255, 255, 255);
         font-weight: bold;
     }
 
+    .navbar a:hover{
+        color: black;
+    }
+
     .text-white {
-        color: white
+        color: rgb(255, 255, 255)
+    }
+    .navbar{
+        display: flex;
+        align-items: center;
+        justify-content: start;
+      
+    }
+
+    .navbar-brand{
+        font-weight: bold;
+        color: white;
+        margin-right: 50px;
+    }
+
+    .navbar-nav{
+        display: flex;
+        align-items: center;
+        justify-content: start;
     }
 
     .books-list {
@@ -55,21 +77,24 @@
 
 <body style="background-color:rgb(66, 62, 62)">
     <nav class="navbar" style="background-color:#00a65a">
-        <a class="navbar-brand"> Book Recommender</a>
+        <h1 class="navbar-brand"> Book Recommendation System</h1>
         <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
             <li><a href="/recommend">Recommend</a></li>
+            <li> <a href="/add-book">Add books</a></li>
+            <li> <a href="/about">About</a></li>
         </ul>
     </nav>
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+                <h5 class="text-white text-center">Popularity Based Algorithm execution time : {{execution_time}}</h5>
                 <h1 class="text-white text-center" style="font-size:50px">Top 20 Books</h1>
                 <hr>
             </div>
             
         </div>
-        <div class="books-list" style="margin-top:50px"> {% for i in range(book_name|length -30 ) %} <div
+        <div class="books-list" style="margin-top:50px"> {% for i in range(book_name|length) %} <div
             class="card">
             <div class="card-body">
                 <div class="img">
@@ -80,6 +105,8 @@
                 <h4 >Votes - {{ votes[i] }}</h4>
                 
                 <h4  >Rating - <span class="ratings">{{ rating[i]}}</span> </h4>
+                <h4  >ISBN - <span class="ratings">{{ book_isbn[i]}}</span> </h4>
+                <a href="{{ url_for('rateBook', book_isbn=book_isbn[i] )}}">Rate Book</a>
             </div>
         </div> {% endfor %} </div>
     </div>

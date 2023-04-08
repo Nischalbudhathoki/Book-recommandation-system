@@ -14,9 +14,30 @@
         color: white;
         font-weight: bold;
     }
+    .navbar a:hover{
+        color: black;
+    }
 
     .text-white {
-        color: white
+        color: rgb(255, 255, 255)
+    }
+    .navbar{
+        display: flex;
+        align-items: center;
+        justify-content: start;
+      
+    }
+
+    .navbar-brand{
+        font-weight: bold;
+        color: white;
+        margin-right: 20px;
+    }
+
+    .navbar-nav{
+        display: flex;
+        align-items: center;
+        justify-content: start;
     }
     .books-list{
         display: flex;
@@ -53,35 +74,42 @@
 
 <body style="background-color:rgb(66, 62, 62)">
     <nav class="navbar" style="background-color:#00a65a">
-        <a class="navbar-brand"> Book Recommender</a>
+        <h1 class="navbar-brand"> Book Recommendation System</h1>
         <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
             <li><a href="/recommend">Recommend</a></li>
+            <li> <a href="/add-book">Add books</a></li>
+            <li> <a href="/about">About</a></li>
         </ul>
     </nav>
     <div class="container">
             <div >
+                <h5 class="text-white text-center">Collaborative Filtering Based Algorithm execution time : {{data.execution_time}}</h5>
+
                 <h1 class="text-white" style="font-size:50px">Recommend Books</h1>
                 <form action="/recommend_books" method="post">
                     <input name="user_input" type="text" class="form-control"><br>
                     <input type="submit" class="btn btn-lg btn-warning">
                 </form>
             </div> 
-            {% if data %} 
+            {% if data.recommended_books %} 
             <div class="books-list" style="margin-top:50px"> 
-                {% for i in data %} 
+                {% for i in data.recommended_books %} 
                 <div class="card">
                     <div class="card-body">
                         <div class="img">
-                            <img class="card-img-top" src="{{i[2]}}">
+                            <img class="card-img-top" src="{{i["Image-URL-M"]}}">
                         </div>
-                        <p >{{i[0]}}</p>
-                        <h4 >{{i[1]}}</h4>
+                        <p >{{i["Book-Title"]}}</p>
+                        <h4 >{{i["Book-Author"]}}</h4>
+                        <h4 >Rating : {{i["Book-Rating"]}}</h4>
+                        <a href="{{ url_for('rateBook', book_isbn=i["ISBN"] )}}">Rate Book</a>
+
                      
                     </div>
                 </div> 
                 {% endfor %} 
-            </div> 
+            </div>
             {% else %}
             <h1 class="text-center text-white">Book Not Found</h1>
             {% endif %}
