@@ -163,6 +163,7 @@ def addBook():
         isbn = request.form['isbn']
         book_title = request.form['book_title']
         book_author = request.form['book_author']
+        book_category = request.form['book_category']
         book_rating = request.form['book_rating']
         book_image = request.files['book_image']
 
@@ -174,6 +175,7 @@ def addBook():
             'ISBN': isbn,
             'Book-Title': book_title,
             'Book-Author': book_author,
+            'Book-Category': book_category,
             'Book-Rating': book_rating,
             'Book-Image': book_image.filename
         }
@@ -194,6 +196,7 @@ def addBook():
 
     addedBooks = addedBooks.rename(columns={'Book-Title': 'book_title',
                                                 'Book-Author':'book_author',
+                                                'Book-Category':'book_category',
                                                 'Book-Image':'book_image',
                               
                                                 })
@@ -201,7 +204,6 @@ def addBook():
 
 
     addedBooks = addedBooks.to_dict(orient="records")  
-    print(addedBooks)
     return render_template("add-book.html", books = addedBooks)
 
 

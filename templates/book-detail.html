@@ -13,7 +13,7 @@
 </head>
 
 
-<body style="background-color:rgb(66, 62, 62)">
+<body style="background-color:rgb(255, 255, 255)">
     <nav class="navbar" style="background-color:#00a65a">
         <h1 class="navbar-brand"> Book Recommendation System</h1>
         <ul class="nav navbar-nav">
@@ -50,9 +50,9 @@
         <br>
         <br>
         
-        <h3 class="text-white " style="font-size:30px"># Similar Books</h3>
+        <h3 class=" " style="font-size:30px"># Similar Books</h3>
         <div class="recommended-books">
-            {% if recommended_books %}
+            {% if recommended_books|length != 0 %}
                 {% for book in recommended_books %}
 
                     <!-- <h2>{{book["Book-Title"]}}</h2> -->
@@ -61,6 +61,10 @@
                     </a>
 
                 {% endfor %}
+            {% else %}
+            <h3 class=" " style="font-size:30px">No Similar Books</h3>
+
+                    
             {% endif %}
         </div>
 

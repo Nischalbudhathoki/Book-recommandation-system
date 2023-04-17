@@ -42,7 +42,7 @@
 </head>
 
 
-<body style="background-color:rgb(66, 62, 62)">
+<body style="background-color:rgb(255, 255, 255)">
     <nav class="navbar" style="background-color:#00a65a">
         <h1 class="navbar-brand"> Book Recommendation System</h1>
         <ul class="nav navbar-nav">
@@ -62,11 +62,13 @@
                 </div>
                 <div class="info">
                     <label for="isbn">ISBN</label> <br>
-                    <input type="text" id="isbn" name="isbn"> <br>
+                    <input type="text" id="isbn" name="isbn"> <br> <br>
                     <label for="book-title">Book Title</label> <br>
-                    <input type="text" id="book-title" name="book_title"> <br>
+                    <input type="text" id="book-title" name="book_title"> <br> <br>
                     <label for="book-author">Book Author</label> <br>
-                    <input type="text" id="book-author" name="book_author"> <br>
+                    <input type="text" id="book-author" name="book_author"> <br> <br>
+                    <label for="book-category">Book Category</label> <br>
+                    <input type="text" id="book-category" name="book_category"> <br> <br>
                     <label for="rating">Rating</label> <br>
                     <input type="number" max="10" min="0" id="rating" name="book_rating">
                     <br> <br><input type="submit" value="Submit">
@@ -74,13 +76,16 @@
             </form>
         </div>
 
-
+<br><br>
+        <h3># New books</h3>
         <div class="searched-books">
             {% if books %}
             {% for book in books %}
 
             <a href="#" class="item">
                 <img alt="{{book.book_title}}" src="{{url_for('static', filename=book.book_image)}}">
+                <p>{{book.book_title}}</p>
+                <p>{{book.book_category|upper}}</p>
             </a>
 
             {% endfor %}

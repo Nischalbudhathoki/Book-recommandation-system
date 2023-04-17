@@ -1,3 +1,7 @@
-ISBN,Book-Title,Book-Author,Book-Rating,Book-Image
+ISBN,Book-Title,Book-Author,Book-Category,Book-Rating,Book-Image
 
 
+
+1241234,asdfasdf,asdfs,romance,3,nischal.jpg
+87687,asdfasdf,asdfs,action,6,sashaim.jpg
+86987,hero,home vai,thriller,2,bhuwan.jpg
