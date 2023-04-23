@@ -7,9 +7,7 @@ import time
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-
 app = Flask(__name__, static_folder="static")
-
 
 
 def trainPopularityModel():
@@ -103,7 +101,6 @@ def recommend(book_title):
 
     execution_time = end_time - start_time
 
-   
     recommended_books = []
 
     try:
@@ -156,55 +153,49 @@ def about():
     return render_template("newabout.html")
 
 
-@app.route("/add-book", methods=['GET','POST'])
+@app.route("/add-book", methods=["GET", "POST"])
 def addBook():
-
-    if request.method == 'POST':
-        isbn = request.form['isbn']
-        book_title = request.form['book_title']
-        book_author = request.form['book_author']
-        book_category = request.form['book_category']
-        book_rating = request.form['book_rating']
-        book_image = request.files['book_image']
+    if request.method == "POST":
+        isbn = request.form["isbn"]
+        book_title = request.form["book_title"]
+        book_author = request.form["book_author"]
+        book_category = request.form["book_category"]
+        book_rating = request.form["book_rating"]
+        book_image = request.files["book_image"]
 
         # Save the image file to static folder
-        book_image.save('static/{}'.format(book_image.filename))
+        book_image.save("static/{}".format(book_image.filename))
 
         # Create a dictionary with the form data
         book_data = {
-            'ISBN': isbn,
-            'Book-Title': book_title,
-            'Book-Author': book_author,
-            'Book-Category': book_category,
-            'Book-Rating': book_rating,
-            'Book-Image': book_image.filename
+            "ISBN": isbn,
+            "Book-Title": book_title,
+            "Book-Author": book_author,
+            "Book-Category": book_category,
+            "Book-Rating": book_rating,
+            "Book-Image": book_image.filename,
         }
 
         # Create a DataFrame from the dictionary
         book_df = pd.DataFrame(book_data, index=[0])
 
         # Write the DataFrame to a CSV file
-        with open('./data/newBook.csv', 'a') as f:
+        with open("./data/newBook.csv", "a") as f:
             book_df.to_csv(f, header=f.tell() == 0, index=False)
-
-
-
-
-
 
     addedBooks = pd.read_csv("./data/newBook.csv")
 
-    addedBooks = addedBooks.rename(columns={'Book-Title': 'book_title',
-                                                'Book-Author':'book_author',
-                                                'Book-Category':'book_category',
-                                                'Book-Image':'book_image',
-                              
-                                                })
+    addedBooks = addedBooks.rename(
+        columns={
+            "Book-Title": "book_title",
+            "Book-Author": "book_author",
+            "Book-Category": "book_category",
+            "Book-Image": "book_image",
+        }
+    )
 
-
-
-    addedBooks = addedBooks.to_dict(orient="records")  
-    return render_template("add-book.html", books = addedBooks)
+    addedBooks = addedBooks.to_dict(orient="records")
+    return render_template("add-book.html", books=addedBooks)
 
 
 @app.route("/rate-book/<book_isbn>", methods=["POST"])
@@ -234,8 +225,7 @@ def rateBook(book_isbn):
 
                 writer.writerow(row)
 
-    return redirect(url_for('index'))
-
+    return redirect(url_for("index"))
 
 
 @app.route("/book-detail/<book_isbn>")
@@ -243,46 +233,81 @@ def bookDetail(book_isbn):
     books_df = pd.read_csv("./data/books.csv")
     book_details = books_df[books_df["ISBN"] == book_isbn]
 
-    book_details = book_details.rename(columns={'Book-Title': 'book_title',
-                                                'Book-Author':'book_author',
-                                                'Year-Of-Publication':'year_of_publication',
-                                                'Image-URL-S':'image_url_s',
-                                                'Image-URL-M':'image_url_m',
-                                                'Image-URL-L':'image_url_l',
-                                                })
-
+    book_details = book_details.rename(
+        columns={
+            "Book-Title": "book_title",
+            "Book-Author": "book_author",
+            "Year-Of-Publication": "year_of_publication",
+            "Image-URL-S": "image_url_s",
+            "Image-URL-M": "image_url_m",
+            "Image-URL-L": "image_url_l",
+        }
+    )
 
     book_details_list = book_details.to_dict(orient="records")
 
- 
-    #book recommendation
-    recommended_books = recommend(book_details_list[0]['book_title'])['recommended_books']
+    # book recommendation
+    recommended_books = recommend(book_details_list[0]["book_title"])[
+        "recommended_books"
+    ]
+
+    return render_template(
+        "book-detail.html",
+        book_details=book_details_list[0],
+        recommended_books=recommended_books,
+    )
 
 
-
-    return render_template("book-detail.html", 
-                           book_details = book_details_list[0],
-                           recommended_books=recommended_books,
-                           )
-
-
-
-@app.route("/searchBook", methods=['GET'])
+@app.route("/searchBook", methods=["GET"])
 def searchBook():
     keyword = request.args.get("keyword")
     books_df = pd.read_csv("./data/books.csv")
-    filtered_df = books_df[books_df['Book-Title'].str.lower().str.contains(keyword.lower())].head(50)
-    filtered_df = filtered_df.rename(columns={'Book-Title': 'book_title',
-                                                'Book-Author':'book_author',
-                                                'Year-Of-Publication':'year_of_publication',
-                                                'Image-URL-S':'image_url_s',
-                                                'Image-URL-M':'image_url_m',
-                                                'Image-URL-L':'image_url_l',
-                                                })
+    filtered_df = books_df[
+        books_df["Book-Title"].str.lower().str.contains(keyword.lower())
+    ].head(50)
+    filtered_df = filtered_df.rename(
+        columns={
+            "Book-Title": "book_title",
+            "Book-Author": "book_author",
+            "Year-Of-Publication": "year_of_publication",
+            "Image-URL-S": "image_url_s",
+            "Image-URL-M": "image_url_m",
+            "Image-URL-L": "image_url_l",
+        }
+    )
     filtered_df_list = filtered_df.to_dict(orient="records")
 
-    return render_template("search-result.html", books = filtered_df_list)
+    return render_template("search-result.html", books=filtered_df_list)
 
+
+@app.route("/book/<int:book_isbn>", methods=["GET"])
+def getCategory(book_isbn):
+    newbooks = pd.read_csv("./data/newBook.csv")
+    newbooks = newbooks.rename(
+        columns={
+            "ISBN":"ISBN",
+            "Book-Title": "book_title",
+            "Book-Author": "book_author",
+            "Book-Category": "book_category",
+            "Book-Image": "book_image",
+        }
+    )
+
+    book_details = newbooks[newbooks["ISBN"] == book_isbn]
+    # category = book_details.book_category[0]
+    if not book_details.empty:  # Check if book_details DataFrame is not empty
+        if len(book_details) > 0:  # Check if book_details DataFrame has at least one row
+            category = book_details.iloc[0]['book_category']  # Access value at index 0 in 'book_category' column
+        else:
+            print("Error: book_details DataFrame has no rows.")
+    else:
+        print("Error: book_details DataFrame is empty.")
+        
+    print(book_details, category)
+    category_books = newbooks[newbooks["book_category"]==category]
+    category_books_list = category_books.to_dict(orient="records")
+
+    return render_template("category.html", books = category_books_list )
 
 
 if __name__ == "__main__":

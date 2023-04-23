@@ -17,7 +17,8 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 5px;
-            margin-top: 30px;
+            margin: 30px 0;
+            padding-bottom: 50px;
         }
 
         .item {
@@ -58,7 +59,7 @@
 
                 <div class="img">
                     <img id="book-default-img" src="{{ url_for('static', filename='default_book.png') }}" alt="">
-                    <input type="file" name="book_image" id="book-img" onchange="previewImage()">
+                    <input type="file" required name="book_image" id="book-img" onchange="previewImage()">
                 </div>
                 <div class="info">
                     <label for="isbn">ISBN</label> <br>
@@ -82,7 +83,7 @@
             {% if books %}
             {% for book in books %}
 
-            <a href="#" class="item">
+            <a href="{{url_for('getCategory', book_isbn = book.ISBN)}}" class="item" >
                 <img alt="{{book.book_title}}" src="{{url_for('static', filename=book.book_image)}}">
                 <p>{{book.book_title}}</p>
                 <p>{{book.book_category|upper}}</p>
@@ -91,12 +92,9 @@
             {% endfor %}
             {% endif %}
         </div>
-
+        
 
     </div>
-
-
-
 
 
 
@@ -110,6 +108,10 @@
 
 
     <script>
+
+
+
+
         function previewImage() {
             var preview = document.getElementById("book-default-img");
             var file = document.getElementById("book-img").files[0];
